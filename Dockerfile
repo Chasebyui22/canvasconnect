@@ -16,5 +16,5 @@ RUN pip install -r requirements.txt
 # Copy project
 COPY . /code/
 
-# Run the application
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Run migrations and start the application
+CMD sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
