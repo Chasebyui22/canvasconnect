@@ -43,6 +43,6 @@ def process_csv(input_file, output_file):
             time.sleep(2)  # Add a delay to avoid rate limiting
 
 if __name__ == "__main__":
-    input_file = "input.csv"
-    output_file = "output.csv"
+    input_file = r"ScrapedData\names.csv"
+    output_file = r"ScrapedData\output.csv"
     process_csv(input_file, output_file)
