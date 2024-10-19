@@ -19,7 +19,7 @@ CanvasConnect is a project designed to enhance the functionality of Canvas, a po
 -About us
 
 ## Installation
-[Press download extensoin]
+[Press download extension]
 -brings you to knew page where you download
 
 ## Usage
