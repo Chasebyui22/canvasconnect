@@ -13,9 +13,13 @@ def get_linkedin_profile(page, name):
     search_box.fill(f"LinkedIn {name} at BYUI")
     search_box.press("Enter")
     
-    linkedin_link = page.query_selector("a[href^='https://www.linkedin.com/in/']")
-    if linkedin_link:
-        return linkedin_link.get_attribute("href")
+    # Wait for the search results to load
+    page.wait_for_selector("div#search")
+    
+    # Get the first search result
+    first_result = page.query_selector("div.g a")
+    if first_result:
+        return first_result.get_attribute("href")
     return None
 
 def save_profile_picture(page, profile_url, name):
@@ -23,23 +27,15 @@ def save_profile_picture(page, profile_url, name):
         return
     
     page.goto(profile_url)
-    time.sleep(2)  # Wait for the page to load
+    page.wait_for_load_state("networkidle")
     
-    # Close any pop-ups
-    try:
-        page.click('button[aria-label="Dismiss"]', timeout=5000)
-    except:
-        pass  # No pop-up found or unable to close
+    sanitized_name = sanitize_filename(name)
+    os.makedirs("pictures", exist_ok=True)
+    image_path = os.path.join("pictures", f"{sanitized_name}.png")
     
-    image_element = page.query_selector('button[class*="pv-top-card-profile-picture__container"]')
-    if image_element:
-        sanitized_name = sanitize_filename(name)
-        os.makedirs("pictures", exist_ok=True)
-        image_path = os.path.join("pictures", f"{sanitized_name}.png")
-        image_element.screenshot(path=image_path)
-        print(f"Saved profile picture for {name}")
-    else:
-        print(f"Could not find profile picture for {name}")
+    # Take a screenshot of the entire page
+    page.screenshot(path=image_path, full_page=True)
+    print(f"Saved screenshot for {name}")
 
 def process_csv(input_csv_path, output_csv_path):
     with sync_playwright() as p:
@@ -62,11 +58,11 @@ def process_csv(input_csv_path, output_csv_path):
                 
                 profile_url = get_linkedin_profile(page, name)
                 if profile_url:
-                    print(f"Found LinkedIn profile for {name}: {profile_url}")
+                    print(f"Found search result for {name}: {profile_url}")
                     save_profile_picture(page, profile_url, name)
                     csv_writer.writerow([name, profile_url])
                 else:
-                    print(f"Could not find LinkedIn profile for {name}")
+                    print(f"Could not find search result for {name}")
                     csv_writer.writerow([name, ''])
                 
                 time.sleep(2)  # Delay to avoid rate limiting
