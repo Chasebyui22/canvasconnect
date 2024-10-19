@@ -1,32 +1,33 @@
-# CanvasConnect
+# 🎨 CanvasConnect
 
 CanvasConnect is a project designed to enhance the functionality of Canvas, a popular learning management system used by educational institutions. This project consists of two main components:
 
-1. A browser extension for Chrome/Firefox that allows users to easily scrape and export user data from Canvas courses.
-2. A Django-based web application that provides additional features and integrations for Canvas users.
+1. 💻 A browser extension for Chrome/Firefox that allows users to easily scrape and export user data from Canvas courses.
+2. 🌐 A Django-based web application that provides additional features and integrations for Canvas users.
 
-## Features
+## ✨ Features
 
-### Browser Extension
-- Scrapes user data (name, email, role) from Canvas course pages
-- Exports scraped data to CSV format
-- Easy-to-use interface integrated into the Canvas UI
+### 🔍 Browser Extension
+- 📝 Scrapes user data (name, email, role) from Canvas course pages.
+- 📂 Exports scraped data to CSV format.
+- 🖱️ Easy-to-use interface integrated into the Canvas UI.
 
-### Web Application
-- [List key features of the Django web app here]
+### 🌟 Web Application
+- 🖥️ Description of app.
+- 📄 Instructions for use of the app.
+- ⬇️ Download link button.
+- ℹ️ About us.
 
-## Installation
+## 🛠️ Installation
+⬇️ Press download extension
+🔗 Brings you to a new page where you download.
 
-[Provide installation instructions for both the browser extension and the web application]
-
-## Usage
-
-[Provide basic usage instructions for both components]
-
-## Contributing
-
-[Instructions for how others can contribute to the project]
-
-## License
-
-[Include license information here]
+## 🚀 Usage
+- 🌐 Open webpage.
+- 📖 Read description and instructions.
+- ⬇️ Press download extension.
+- ⚙️ Once the extension is downloaded, enable scraping.
+- 📚 Open course students.
+- 🔍 The extension will scrape and find LinkedIn accounts and output them.
+- 👤 Click on links that appear to find your friends' LinkedIn profiles.
+- 🚫 Disable scraping to avoid scraping every time.
