@@ -8,7 +8,8 @@ def sanitize_filename(name):
 
 def get_linkedin_profile(page, name):
     page.goto("https://www.google.com")
-    search_box = page.query_selector('input[name="q"]')
+    search_box = page.get_by_role("combobox", name="Search")
+    search_box.click()
     search_box.fill(f"LinkedIn {name} at BYUI")
     search_box.press("Enter")
     
