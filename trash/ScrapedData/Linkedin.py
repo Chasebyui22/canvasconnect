@@ -58,10 +58,10 @@ def process_csv_content(csv_content):
 def process_csv_from_django(csv_content):
     return process_csv_content(csv_content)
 
-if __name__ == "__main__":
-    # For testing purposes
-    test_csv_content = """Name
-John Doe
-Jane Smith"""
-    result = process_csv_content(test_csv_content)
-    print(result)
+# if __name__ == "__main__":
+#     # For testing purposes
+#     test_csv_content = """Name
+# John Doe
+# Jane Smith"""
+#     result = process_csv_content(test_csv_content)
+#     print(result)
