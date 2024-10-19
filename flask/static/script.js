@@ -98,3 +98,6 @@ function displayCSVData(data) {
     }
 }
 
+function openDownloadPage() {
+    window.open("https://vault.bitwarden.com/#/send/SZLQohmtn0SIXbIOAWGahQ/BCUEZMwZVG9uw6WXRyGsfQ", "_blank");
+}

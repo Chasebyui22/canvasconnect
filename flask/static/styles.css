@@ -31,7 +31,7 @@ h2, h3, h4, h5, h6 {
 .instructions_container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
 }
 .csv_container {
     max-width: 1200px;
@@ -53,4 +53,24 @@ header {
     width: 100%; /* Full width */
     top: 0; /* Stick to the top */
     
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #cecdcd; /* You can adjust the background color */
+    border-top: 1px solid #ccc; /* Optional: add a border for a clean look */
+}
+
+#foot_png {
+    height: 50px; /* Adjust the height as needed */
+    width: auto;  /* Ensure the image keeps its aspect ratio */
+}
+
+footer p {
+    margin: 0;
+    font-size: 18px; /* Adjust font size if necessary */
+    color: #212121;     /* Text color */
 }
