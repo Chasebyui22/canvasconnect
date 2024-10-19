@@ -1,23 +1,56 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<h2>Canvas Users</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.role }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>/* General page styles */
+        body {
+            background-color: #dddede; /* Light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Professional-looking font */
+            color: #333333; /* Dark gray text for readability */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            
+        }
+        
+        /* Style for the heading */
+        h1 {
+            color: #4A90E2; /* Light blue color for the headings */
+            font-weight: 600; /* Make headings bold */
+            margin-top: 0;
+            text-align: center;  /* Center horizontally */
+        }
+        
+        h2, h3, h4, h5, h6 {
+            color: #333333; /* Dark gray color for subheadings */
+            font-weight: 600; /* Make subheadings bold */
+        }
+        /* Container for your page content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        </style>
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <h1>Canvas Connect</h1>
+    </div>
+    <div class="container">
+        <h2>Canvas Connect</h2>
+        <p>Welcome to Canvas Connect! This is a social network for students and teachers to connect with each other. You can create an account, make friends, and share your thoughts and ideas with the community.</p>
+        <h3>Features</h3>
+        <ul>
+            <li>Create an account</li>
+            <li>Make friends</li>
+            <li>Post updates</li>
+            <li>Like and comment on posts</li>
+        </ul>
+        <h3>Get Started</h3>
+        <p>Ready to get started? Click the button below to create an account and join the Canvas Connect community!</p>
+        <button>Create Account</button>
+</body>
+</html>
