@@ -22,41 +22,7 @@ def get_linkedin_profile(page, name):
         return first_result.get_attribute("href")
     return None
 
-def save_profile_picture(page, profile_url, name):
-    if not profile_url:
-        return
-    
-    page.goto(profile_url)
-    
-    # Wait for the page to load
-    page.wait_for_load_state("domcontentloaded", timeout=10000)
-    
-    sanitized_name = sanitize_filename(name)
-    os.makedirs("pictures", exist_ok=True)
-    image_path = os.path.join("pictures", f"{sanitized_name}.png")
-    
-    try:
-        # Attempt to save the profile picture
-        with page.expect_download() as download_info:
-            page.get_by_role("img", name="profile photo").click(button="right")
-        download = download_info.value
-        download.save_as(image_path)
-        print(f"Saved profile picture for {name}")
-    except Exception as e:
-        print(f"Failed to save profile picture for {name}: {str(e)}")
-        
-        # Take a screenshot of the entire page as a fallback
-        page.screenshot(path=image_path, full_page=True)
-        print(f"Saved full page screenshot for {name}")
-    
-    # Try to dismiss the pop-up after attempting to save the picture
-    try:
-        page.get_by_role("button", name="Dismiss").click(timeout=5000)
-    except:
-        print(f"No pop-up found or unable to dismiss for {name}")
-    
-    # Wait a bit more for any animations to settle
-    page.wait_for_timeout(2000)
+# This function is no longer needed
 
 def process_csv(input_csv_path, output_csv_path):
     with sync_playwright() as p:
@@ -80,7 +46,6 @@ def process_csv(input_csv_path, output_csv_path):
                 profile_url = get_linkedin_profile(page, name)
                 if profile_url:
                     print(f"Found search result for {name}: {profile_url}")
-                    save_profile_picture(page, profile_url, name)
                     csv_writer.writerow([name, profile_url])
                 else:
                     print(f"Could not find search result for {name}")
