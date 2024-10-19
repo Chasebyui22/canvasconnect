@@ -7,15 +7,25 @@ def sanitize_filename(name):
     return "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
 
 def get_linkedin_profile(page, name):
-    page.goto("https://www.google.com")
-    search_box = page.query_selector('input[name="q"]')
-    search_box.fill(f"LinkedIn {name} at BYUI")
-    search_box.press("Enter")
-    
-    linkedin_link = page.query_selector("a[href^='https://www.linkedin.com/in/']")
-    if linkedin_link:
-        return linkedin_link.get_attribute("href")
-    return None
+    try:
+        page.goto("https://www.google.com", wait_until="networkidle")
+        search_box = page.query_selector('input[name="q"]')
+        if not search_box:
+            print(f"Search box not found for {name}. Page title: {page.title()}")
+            return None
+        search_box.fill(f"LinkedIn {name} at BYUI")
+        search_box.press("Enter")
+        page.wait_for_load_state("networkidle")
+        
+        linkedin_link = page.query_selector("a[href^='https://www.linkedin.com/in/']")
+        if linkedin_link:
+            return linkedin_link.get_attribute("href")
+        else:
+            print(f"LinkedIn link not found for {name}")
+        return None
+    except Exception as e:
+        print(f"Error processing {name}: {str(e)}")
+        return None
 
 def save_profile_picture(page, profile_url, name):
     if not profile_url:
