@@ -13,20 +13,21 @@ CanvasConnect is a project designed to enhance the functionality of Canvas, a po
 - Easy-to-use interface integrated into the Canvas UI
 
 ### Web Application
-- [List key features of the Django web app here]
+- Description of app
+-[Instructions for use of the app]
+- Download link button
+-About us
 
 ## Installation
-
-[Provide installation instructions for both the browser extension and the web application]
+[Press download extensoin]
+-brings you to knew page where you download
 
 ## Usage
-
-[Provide basic usage instructions for both components]
-
-## Contributing
-
-[Instructions for how others can contribute to the project]
-
-## License
-
-[Include license information here]
+-[Open webpage]
+-Read description and instruction
+-Press download extension
+-once extension is downloaded enable scaping
+-open course students
+-The extension will scrape and find linkedin accounts and output them.
+-Click on links that appear to find your friends linkedin profiles
+-disable scraping to avoid scraping every time
