@@ -1,25 +1,17 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# Use the official Playwright image
+FROM mcr.microsoft.com/playwright:v1.42.1-focal
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
-    gnupg \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy application code
+COPY . .
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python and pip
+RUN apt-get update && apt-get install -y python3 python3-pip
 
-# Install Playwright and its dependencies
-RUN pip install playwright
-RUN playwright install chromium
-RUN playwright install-deps chromium
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
@@ -29,4 +21,4 @@ ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
 # Run app.py when the container launches
-CMD ["flask", "run"]
+CMD ["python3", "-m", "flask", "run"]
