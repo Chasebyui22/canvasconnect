@@ -28,23 +28,35 @@ def save_profile_picture(page, profile_url, name):
     
     page.goto(profile_url)
     
-    # Wait for the page to load and try to dismiss the pop-up
+    # Wait for the page to load
+    page.wait_for_load_state("domcontentloaded", timeout=10000)
+    
+    sanitized_name = sanitize_filename(name)
+    os.makedirs("pictures", exist_ok=True)
+    image_path = os.path.join("pictures", f"{sanitized_name}.png")
+    
     try:
-        page.wait_for_load_state("domcontentloaded", timeout=10000)
+        # Attempt to save the profile picture
+        with page.expect_download() as download_info:
+            page.get_by_role("img", name="profile photo").click(button="right")
+        download = download_info.value
+        download.save_as(image_path)
+        print(f"Saved profile picture for {name}")
+    except Exception as e:
+        print(f"Failed to save profile picture for {name}: {str(e)}")
+        
+        # Take a screenshot of the entire page as a fallback
+        page.screenshot(path=image_path, full_page=True)
+        print(f"Saved full page screenshot for {name}")
+    
+    # Try to dismiss the pop-up after attempting to save the picture
+    try:
         page.get_by_role("button", name="Dismiss").click(timeout=5000)
     except:
         print(f"No pop-up found or unable to dismiss for {name}")
     
     # Wait a bit more for any animations to settle
     page.wait_for_timeout(2000)
-    
-    sanitized_name = sanitize_filename(name)
-    os.makedirs("pictures", exist_ok=True)
-    image_path = os.path.join("pictures", f"{sanitized_name}.png")
-    
-    # Take a screenshot of the entire page
-    page.screenshot(path=image_path, full_page=True)
-    print(f"Saved screenshot for {name}")
 
 def process_csv(input_csv_path, output_csv_path):
     with sync_playwright() as p:
