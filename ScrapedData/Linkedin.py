@@ -7,8 +7,10 @@ def sanitize_filename(name):
     return "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
 
 def get_linkedin_profile(page, name):
-    search_url = f"https://www.google.com/search?q=site%3Alinkedin.com%2Fin%2F+{name.replace(' ', '+')}+BYUI"
-    page.goto(search_url)
+    page.goto("https://www.google.com")
+    search_box = page.query_selector('input[name="q"]')
+    search_box.fill(f"LinkedIn {name} at BYUI")
+    search_box.press("Enter")
     
     linkedin_link = page.query_selector("a[href^='https://www.linkedin.com/in/']")
     if linkedin_link:
@@ -22,7 +24,13 @@ def save_profile_picture(page, profile_url, name):
     page.goto(profile_url)
     time.sleep(2)  # Wait for the page to load
     
-    image_element = page.query_selector('img[alt="profile photo"]')
+    # Close any pop-ups
+    try:
+        page.click('button[aria-label="Dismiss"]', timeout=5000)
+    except:
+        pass  # No pop-up found or unable to close
+    
+    image_element = page.query_selector('button[class*="pv-top-card-profile-picture__container"]')
     if image_element:
         sanitized_name = sanitize_filename(name)
         os.makedirs("pictures", exist_ok=True)
@@ -32,14 +40,19 @@ def save_profile_picture(page, profile_url, name):
     else:
         print(f"Could not find profile picture for {name}")
 
-def process_csv(csv_path):
+def process_csv(input_csv_path, output_csv_path):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context()
         page = context.new_page()
 
-        with open(csv_path, 'r') as csvfile:
-            csv_reader = csv.reader(csvfile)
+        with open(input_csv_path, 'r') as input_file, open(output_csv_path, 'w', newline='') as output_file:
+            csv_reader = csv.reader(input_file)
+            csv_writer = csv.writer(output_file)
+            
+            # Write header to output CSV
+            csv_writer.writerow(['Name', 'LinkedIn URL'])
+            
             next(csv_reader)  # Skip header row if present
             
             for row in csv_reader:
@@ -50,15 +63,18 @@ def process_csv(csv_path):
                 if profile_url:
                     print(f"Found LinkedIn profile for {name}: {profile_url}")
                     save_profile_picture(page, profile_url, name)
+                    csv_writer.writerow([name, profile_url])
                 else:
                     print(f"Could not find LinkedIn profile for {name}")
+                    csv_writer.writerow([name, ''])
                 
                 time.sleep(2)  # Delay to avoid rate limiting
 
         browser.close()
 
 if __name__ == "__main__":
-    csv_path = "ScrapedData/names.csv"
-    process_csv(csv_path)
+    input_csv_path = "ScrapedData/names.csv"
+    output_csv_path = "ScrapedData/linkedin_profiles.csv"
+    process_csv(input_csv_path, output_csv_path)
 
 
