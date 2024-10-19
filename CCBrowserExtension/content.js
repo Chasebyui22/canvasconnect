@@ -1,50 +1,53 @@
-console.log("Content script running on: ", window.location.href);
+chrome.storage.sync.get(['toggleState'], function(result) {
+  const isEnabled = result.toggleState === undefined ? true : result.toggleState; // Default to 'true' if undefined
+  if (isEnabled) {
+      console.log("Content script running on: ", window.location.href);
+      
+      // Function to scrape the class name
+      const getClassName = () => {
+          const classNameElement = document.querySelector('nav li:nth-child(2) span.ellipsible'); 
+          console.log("Class Name Element: ", classNameElement);
+          return classNameElement ? classNameElement.innerText.trim() : 'Class Name Not Found';
+      };
 
-// Function to scrape the class name
-const getClassName = () => {
-  // Select the element containing the class name
-  const classNameElement = document.querySelector('nav li:nth-child(2) span.ellipsible'); // Use the appropriate selector
-  console.log("Class Name Element: ", classNameElement); // Log the selected element
-  return classNameElement ? classNameElement.innerText.trim() : 'Class Name Not Found';
-};
+      // Function to scrape table data
+      const scrapeTableData = () => {
+          let tableData = [];
+          const tables = document.querySelectorAll('table');
 
-// Function to scrape table data
-const scrapeTableData = () => {
-  let tableData = [];
-  const tables = document.querySelectorAll('table');
+          tables.forEach(table => {
+              table.querySelectorAll('tr').forEach(row => {
+                  let rowData = [];
+                  row.querySelectorAll('td').forEach(cell => rowData.push(cell.innerText));
+                  tableData.push(rowData);
+              });
+          });
 
-  tables.forEach(table => {
-    table.querySelectorAll('tr').forEach(row => {
-      let rowData = [];
-      row.querySelectorAll('td').forEach(cell => rowData.push(cell.innerText));
-      tableData.push(rowData);
-    });
-  });
+          const className = getClassName();
+          console.log("Retrieved Class Name: ", className);
 
-  // Get the class name
-  const className = getClassName();
-  console.log("Retrieved Class Name: ", className); // Log the retrieved class name
+          const csvData = [[className], ...tableData];
 
-  // Prepend the class name to the data
-  const csvData = [[className], ...tableData]; // Add class name as the first row
+          if (csvData.length > 0) {
+              chrome.runtime.sendMessage({ data: csvData });
+          } else {
+              chrome.runtime.sendMessage({ noData: true });
+          }
+      };
 
-  // Send scraped data
-  if (csvData.length > 0) {
-    chrome.runtime.sendMessage({ data: csvData });
+      // Function to wait for the table to load
+      const waitForTable = () => {
+          const tables = document.querySelectorAll('table');
+          if (tables.length > 0) {
+              scrapeTableData();
+          } else {
+              setTimeout(waitForTable, 1000);
+          }
+      };
+
+      // Start waiting for the table to load
+      waitForTable();
   } else {
-    chrome.runtime.sendMessage({ noData: true });
+      console.log("Scraping is disabled.");
   }
-};
-
-// Function to wait for the table to load
-const waitForTable = () => {
-  const tables = document.querySelectorAll('table');
-  if (tables.length > 0) {
-    scrapeTableData();
-  } else {
-    setTimeout(waitForTable, 1000); // Retry after 1 second
-  }
-};
-
-// Start waiting for the table to load
-waitForTable();
+});
