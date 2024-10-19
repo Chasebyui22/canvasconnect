@@ -1,16 +1,28 @@
 {
-
   "manifest_version": 3,
   "name": "Canvas Connect Extension",
   "version": "1.0",
-  "description": "A browser extension to scrape web data and save it as a CSV.",
+  "description": "The extension for all your linkedin needs. This extension is to be used according to the instructions found on the CanvasConnect website.",
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "Icon_Images/CanvasConnect_16x16.png",
+      "48": "Icon_Images/CanvasConnect_48x48.png",
+      "128": "Icon_Images/CanvasConnect_128x128.png"
+    }
   },
+
+  "icons": {
+    "16": "Icon_Images/CanvasConnect_16x16.png",
+    "48": "Icon_Images/CanvasConnect_48x48.png",
+    "128": "Icon_Images/CanvasConnect_128x128.png"
+  },
+
   "permissions": [
     "activeTab", 
     "downloads",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "background": {
     "service_worker": "background.js"
