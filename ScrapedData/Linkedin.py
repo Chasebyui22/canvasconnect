@@ -27,7 +27,16 @@ def save_profile_picture(page, profile_url, name):
         return
     
     page.goto(profile_url)
-    page.wait_for_load_state("networkidle")
+    
+    # Wait for the page to load and try to dismiss the pop-up
+    try:
+        page.wait_for_load_state("domcontentloaded", timeout=10000)
+        page.get_by_role("button", name="Dismiss").click(timeout=5000)
+    except:
+        print(f"No pop-up found or unable to dismiss for {name}")
+    
+    # Wait a bit more for any animations to settle
+    page.wait_for_timeout(2000)
     
     sanitized_name = sanitize_filename(name)
     os.makedirs("pictures", exist_ok=True)
