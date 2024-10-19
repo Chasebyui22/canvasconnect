@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static\styles.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <h1>Canvas Connect</h1>
+    </div>
+    <div class="container">
+        <h2>Canvas Connect</h2>
+        <p>Welcome to Canvas Connect! This is a social network for students and teachers to connect with each other. You can create an account, make friends, and share your thoughts and ideas with the community.</p>
+        <!-- <h3>Features</h3>
+        <ul>
+            <li>Create an account</li>
+            <li>Make friends</li>
+            <li>Post updates</li>
+            <li>Like and comment on posts</li>
+        </ul>
+        <h3>Get Started</h3>
+        <p>Ready to get started? Click the button below to create an account and join the Canvas Connect community!</p>
+        <button>Create Account</button> -->
+    </div>
+    <div class="container">
+        <h1>Import CSV File</h1>
+        <input type="file" id="csvFileInput" accept=".csv" />
+        <button onclick="handleFileUpload()">Upload CSV</button>
+        
+        <!-- Existing h3 element to display the first row -->
+        <h3 id="csvHeader"></h3>  <!-- Initially empty -->
+        
+        <table id="csvTable">
+            <thead>
+                <!-- Table headers will be populated dynamically -->
+            </thead>
+            <tbody>
+                <!-- Table rows will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+    <script src="static\script.js"></script>
+</body>
+</html>

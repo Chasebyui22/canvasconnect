@@ -1,25 +1,24 @@
 {
-    "manifest_version": 3,
-    "name": "Canvas Connect Extension",
-    "version": "1.0",
-    "description": "A browser extension to scrape web data and save it as a CSV.",
-    "action": {
-      "default_popup": "popup.html"
-    },
-    "permissions": [
-      "activeTab", 
-      "downloads",
-      "scripting"
-    ],
-    "background": {
-      "service_worker": "background.js"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
-      }
-    ]
-  }
-  
-  
+
+  "manifest_version": 3,
+  "name": "Canvas Connect Extension",
+  "version": "1.0",
+  "description": "A browser extension to scrape web data and save it as a CSV.",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab", 
+    "downloads",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://byui.instructure.com/*users"], 
+      "js": ["content.js"]
+    }
+  ]
+}

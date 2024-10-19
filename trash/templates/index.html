@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>/* General page styles */
+        body {
+            background-color: #dddede; /* Light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Professional-looking font */
+            color: #333333; /* Dark gray text for readability */
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            
+        }
+        
+        /* Style for the heading */
+        h1 {
+            color: #4A90E2; /* Light blue color for the headings */
+            font-weight: 600; /* Make headings bold */
+            margin-top: 0;
+            text-align: center;  /* Center horizontally */
+        }
+        
+        h2, h3, h4, h5, h6 {
+            color: #333333; /* Dark gray color for subheadings */
+            font-weight: 600; /* Make subheadings bold */
+        }
+        /* Container for your page content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        </style>
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <h1>Canvas Connect</h1>
+    </div>
+    <div class="container">
+        <h2>Canvas Connect</h2>
+        <p>Welcome to Canvas Connect! This is a social network for students and teachers to connect with each other. You can create an account, make friends, and share your thoughts and ideas with the community.</p>
+        <!-- <h3>Features</h3>
+        <ul>
+            <li>Create an account</li>
+            <li>Make friends</li>
+            <li>Post updates</li>
+            <li>Like and comment on posts</li>
+        </ul>
+        <h3>Get Started</h3>
+        <p>Ready to get started? Click the button below to create an account and join the Canvas Connect community!</p>
+        <button>Create Account</button> -->
+    </div>
+    <div class="container">
+        <h1>Import CSV File</h1>
+        <input type="file" id="csvFileInput" accept=".csv" />
+        <button onclick="handleFileUpload()">Upload CSV</button>
+        
+        <!-- Existing h3 element to display the first row -->
+        <h3 id="csvHeader"></h3>  <!-- Initially empty -->
+        
+        <table id="csvTable">
+            <thead>
+                <!-- Table headers will be populated dynamically -->
+            </thead>
+            <tbody>
+                <!-- Table rows will be populated dynamically -->
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+        function handleFileUpload() {
+            const input = document.getElementById('csvFileInput');
+            const file = input.files[0];
+        
+            if (file) {
+                const reader = new FileReader();
+        
+                reader.onload = function (e) {
+                    const text = e.target.result;
+                    const data = parseCSV(text);  // Parse CSV text to array
+                    displayCSVData(data);  // Use the data to display it in the table and h3
+                };
+        
+                reader.readAsText(file);
+            } else {
+                alert("Please select a CSV file first.");
+            }
+        }
+        
+        // Function to parse CSV string into a 2D array
+        function parseCSV(text) {
+            const rows = text.split("\n");
+            return rows.map(row => row.split(","));
+        }
+        
+        // Function to display the first row as h3 and the rest as table
+        function displayCSVData(data) {
+            const tableHead = document.querySelector('#csvTable thead');
+            const tableBody = document.querySelector('#csvTable tbody');
+            const headerElement = document.getElementById('csvHeader');
+        
+            // Clear the table before adding new data
+            tableHead.innerHTML = '';
+            tableBody.innerHTML = '';
+        
+            // Display the first row as an <h3>
+            if (data.length > 0) {
+                const firstRow = data[0][0];  // First row, first column (since it's one column)
+                headerElement.textContent = firstRow.trim();  // Set the text of the existing h3
+        
+                // Create table headers from the second row (skipping the first)
+                const headers = data[1];
+                const headerRow = document.createElement('tr');
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.textContent = header.trim();  // Trim to remove excess spaces
+                    headerRow.appendChild(th);
+                });
+                tableHead.appendChild(headerRow);
+        
+                // Create table rows for the rest of the CSV data (starting from the third row)
+                data.slice(2).forEach(row => {
+                    const rowElement = document.createElement('tr');
+                    row.forEach(cell => {
+                        const td = document.createElement('td');
+                        td.textContent = cell.trim();  // Trim to remove excess spaces
+                        rowElement.appendChild(td);
+                    });
+                    tableBody.appendChild(rowElement);
+                });
+            }
+        }
+        </script>
+</body>
+</html>
