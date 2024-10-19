@@ -1,90 +1,68 @@
 import csv
 import os
-import time
-from playwright.sync_api import sync_playwright
+import re
+from playwright.sync_api import Playwright, sync_playwright, expect
 
 def sanitize_filename(name):
-    return "".join(c for c in name if c.isalnum() or c in (' ', '.', '_')).rstrip()
+    return re.sub(r'[^\w\-_\. ]', '_', name).strip()
 
-def get_linkedin_profile(page, name):
-    try:
-        page.goto("https://www.google.com", wait_until="networkidle")
-        search_box = page.query_selector('input[name="q"]')
-        if not search_box:
-            print(f"Search box not found for {name}. Page title: {page.title()}")
-            return None
-        search_box.fill(f"LinkedIn {name} at BYUI")
-        search_box.press("Enter")
-        page.wait_for_load_state("networkidle")
+def run(playwright: Playwright, input_csv_path: str, output_csv_path: str) -> None:
+    browser = playwright.chromium.launch(headless=False)
+    context = browser.new_context()
+    page = context.new_page()
+
+    os.makedirs("pictures", exist_ok=True)
+
+    with open(input_csv_path, 'r') as input_file, open(output_csv_path, 'w', newline='') as output_file:
+        csv_reader = csv.reader(input_file)
+        csv_writer = csv.writer(output_file)
         
-        linkedin_link = page.query_selector("a[href^='https://www.linkedin.com/in/']")
-        if linkedin_link:
-            return linkedin_link.get_attribute("href")
-        else:
-            print(f"LinkedIn link not found for {name}")
-        return None
-    except Exception as e:
-        print(f"Error processing {name}: {str(e)}")
-        return None
-
-def save_profile_picture(page, profile_url, name):
-    if not profile_url:
-        return
-    
-    page.goto(profile_url)
-    time.sleep(2)  # Wait for the page to load
-    
-    # Close any pop-ups
-    try:
-        page.click('button[aria-label="Dismiss"]', timeout=5000)
-    except:
-        pass  # No pop-up found or unable to close
-    
-    image_element = page.query_selector('button[class*="pv-top-card-profile-picture__container"]')
-    if image_element:
-        sanitized_name = sanitize_filename(name)
-        os.makedirs("pictures", exist_ok=True)
-        image_path = os.path.join("pictures", f"{sanitized_name}.png")
-        image_element.screenshot(path=image_path)
-        print(f"Saved profile picture for {name}")
-    else:
-        print(f"Could not find profile picture for {name}")
-
-def process_csv(input_csv_path, output_csv_path):
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        context = browser.new_context()
-        page = context.new_page()
-
-        with open(input_csv_path, 'r') as input_file, open(output_csv_path, 'w', newline='') as output_file:
-            csv_reader = csv.reader(input_file)
-            csv_writer = csv.writer(output_file)
+        csv_writer.writerow(['Name', 'LinkedIn URL'])
+        
+        next(csv_reader)  # Skip header row if present
+        
+        for row in csv_reader:
+            name = row[0]  # Assuming the name is in the first column
+            print(f"Processing: {name}")
             
-            # Write header to output CSV
-            csv_writer.writerow(['Name', 'LinkedIn URL'])
+            page.goto("https://www.google.com/")
+            page.get_by_label("Search", exact=True).fill(f"Linkedin {name} at byui")
+            page.get_by_role("combobox", name="Search").press("Enter")
             
-            next(csv_reader)  # Skip header row if present
-            
-            for row in csv_reader:
-                name = row[0]  # Assuming the name is in the first column
-                print(f"Processing: {name}")
+            linkedin_link = page.get_by_role("link", name=re.compile(f"{name}", re.IGNORECASE)).first
+            if linkedin_link:
+                profile_url = linkedin_link.get_attribute("href")
+                print(f"Found LinkedIn profile for {name}: {profile_url}")
                 
-                profile_url = get_linkedin_profile(page, name)
-                if profile_url:
-                    print(f"Found LinkedIn profile for {name}: {profile_url}")
-                    save_profile_picture(page, profile_url, name)
-                    csv_writer.writerow([name, profile_url])
+                page.goto(profile_url)
+                page.wait_for_load_state("networkidle")
+                
+                try:
+                    page.get_by_role("button", name="Dismiss").click(timeout=5000)
+                except:
+                    pass  # No pop-up found or unable to close
+                
+                profile_image = page.get_by_role("img", name=re.compile(f"{name}", re.IGNORECASE)).first
+                if profile_image:
+                    sanitized_name = sanitize_filename(name)
+                    image_path = os.path.join("pictures", f"{sanitized_name}.png")
+                    profile_image.screenshot(path=image_path)
+                    print(f"Saved profile picture for {name}")
                 else:
-                    print(f"Could not find LinkedIn profile for {name}")
-                    csv_writer.writerow([name, ''])
+                    print(f"Could not find profile picture for {name}")
                 
-                time.sleep(2)  # Delay to avoid rate limiting
+                csv_writer.writerow([name, profile_url])
+            else:
+                print(f"Could not find LinkedIn profile for {name}")
+                csv_writer.writerow([name, ''])
 
-        browser.close()
+    context.close()
+    browser.close()
 
 if __name__ == "__main__":
     input_csv_path = "ScrapedData/names.csv"
     output_csv_path = "ScrapedData/linkedin_profiles.csv"
-    process_csv(input_csv_path, output_csv_path)
+    with sync_playwright() as playwright:
+        run(playwright, input_csv_path, output_csv_path)
 
 
