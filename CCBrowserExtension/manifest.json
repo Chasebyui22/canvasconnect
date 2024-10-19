@@ -1,4 +1,5 @@
 {
+<
   "manifest_version": 3,
   "name": "Canvas Connect Extension",
   "version": "1.0",
@@ -21,5 +22,3 @@
     }
   ]
 }
-
-  
