@@ -61,6 +61,44 @@ function parseCSV(text) {
 }
 
 // Function to display the CSV data in a table
+// function displayCSVData(data) {
+//     const tableHead = document.querySelector('#csvTable thead');
+//     const tableBody = document.querySelector('#csvTable tbody');
+
+//     // Clear the table before adding new data
+//     tableHead.innerHTML = '';
+//     tableBody.innerHTML = '';
+
+//     // Create table headers from the first row of the remaining data
+//     if (data.length > 0) {
+//         // Parse the first row as headers (splitting the string by commas)
+//         const headers = data[0].split(",");
+//         const headerRow = document.createElement('tr');
+
+//         headers.forEach(header => {
+//             const th = document.createElement('th');
+//             th.textContent = header.trim();  // Trim to remove excess spaces
+//             headerRow.appendChild(th);
+//         });
+//         tableHead.appendChild(headerRow);
+
+//         // Create table rows for the rest of the CSV data
+//         data.slice(1).forEach(row => {
+//             const rowElement = document.createElement('tr');
+            
+//             // Split the row string into individual cells
+//             const cells = row.split(",");
+//             cells.forEach(cell => {
+//                 const td = document.createElement('td');
+//                 td.textContent = cell.trim();  // Trim to remove excess spaces
+//                 rowElement.appendChild(td);
+//             });
+//             tableBody.appendChild(rowElement);
+//         });
+//     }
+// }
+
+// Function to display the CSV data in a table
 function displayCSVData(data) {
     const tableHead = document.querySelector('#csvTable thead');
     const tableBody = document.querySelector('#csvTable tbody');
@@ -88,15 +126,28 @@ function displayCSVData(data) {
             
             // Split the row string into individual cells
             const cells = row.split(",");
-            cells.forEach(cell => {
+            
+            cells.forEach((cell, index) => {
                 const td = document.createElement('td');
-                td.textContent = cell.trim();  // Trim to remove excess spaces
+                
+                // For the second column (index 1), create an anchor (link)
+                if (index === 1) {
+                    const link = document.createElement('a');
+                    link.href = cell.trim();  // Set the href to the cell content
+                    link.textContent = cell.trim();  // Display the same content as the link text
+                    link.target = "_blank";  // Optional: open in a new tab
+                    td.appendChild(link);  // Append the anchor to the table cell
+                } else {
+                    td.textContent = cell.trim();  // For other columns, just add text
+                }
+                
                 rowElement.appendChild(td);
             });
             tableBody.appendChild(rowElement);
         });
     }
 }
+
 
 function openDownloadPage() {
     window.open("https://vault.bitwarden.com/#/send/SZLQohmtn0SIXbIOAWGahQ/BCUEZMwZVG9uw6WXRyGsfQ", "_blank");
