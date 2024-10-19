@@ -1,0 +1,29 @@
+
+body {
+    background-color: #dddede; /* Light gray background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Professional-looking font */
+    color: #333333; /* Dark gray text for readability */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    
+}
+
+/* Style for the heading */
+h1 {
+    color: #4A90E2; /* Light blue color for the headings */
+    font-weight: 600; /* Make headings bold */
+    margin-top: 0;
+    text-align: center;  /* Center horizontally */
+}
+
+h2, h3, h4, h5, h6 {
+    color: #333333; /* Dark gray color for subheadings */
+    font-weight: 600; /* Make subheadings bold */
+}
+/* Container for your page content */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
