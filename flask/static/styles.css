@@ -74,3 +74,9 @@ footer p {
     font-size: 18px; /* Adjust font size if necessary */
     color: #212121;     /* Text color */
 }
+
+.img {
+    width: 800px;
+    height: 450px;
+    overflow: hidden;
+}
