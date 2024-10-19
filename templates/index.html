@@ -42,7 +42,7 @@
     <div class="container">
         <h2>Canvas Connect</h2>
         <p>Welcome to Canvas Connect! This is a social network for students and teachers to connect with each other. You can create an account, make friends, and share your thoughts and ideas with the community.</p>
-        <h3>Features</h3>
+        <!-- <h3>Features</h3>
         <ul>
             <li>Create an account</li>
             <li>Make friends</li>
@@ -51,144 +51,78 @@
         </ul>
         <h3>Get Started</h3>
         <p>Ready to get started? Click the button below to create an account and join the Canvas Connect community!</p>
-        <button>Create Account</button>
+        <button>Create Account</button> -->
     </div>
-    <!-- <div class="container">
-        <h1>Import CSV File</h1>
-        <input type="file" id="csvFileInput" accept=".csv" />
-        <button onclick="handleFileUpload()">Upload CSV</button>
-    </div>
-    <script>
-    function handleFileUpload() {
-        const input = document.getElementById('csvFileInput');
-        const file = input.files[0];
-    
-        if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-    
-            fetch('/your-server-endpoint', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Server response:", data);
-            })
-            .catch(error => {
-                console.error("Error uploading file:", error);
-            });
-        } else {
-            alert("Please select a CSV file first.");
-        }
-    }
-    </script> -->
     <div class="container">
         <h1>Import CSV File</h1>
         <input type="file" id="csvFileInput" accept=".csv" />
         <button onclick="handleFileUpload()">Upload CSV</button>
         
-        <!-- Table to display CSV data -->
-        <table id="csvTable" style="display:none;">
-            <thead>
-                <tr id="tableHeader"></tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
+        <!-- Table to display CSV data dynamically -->
+        <table id="csvTable" border="1">
+            <thead></thead>
+            <tbody></tbody>
         </table>
     </div>
-    
+
     <script>
-        // function handleFileUpload() {
-        //     const input = document.getElementById('csvFileInput');
-        //     const file = input.files[0];
-    
-        //     if (file) {
-        //         const formData = new FormData();
-        //         formData.append('file', file);
-    
-        //         fetch('/your-server-endpoint', {
-        //             method: 'POST',
-        //             body: formData
-        //         })
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             console.log("Server response:", data);
-        //             displayCSVData(data); // Pass the data to the display function
-        //         })
-        //         .catch(error => {
-        //             console.error("Error uploading file:", error);
-        //         });
-        //     } else {
-        //         alert("Please select a CSV file first.");
-        //     }
-        // }
-        function handleFileUpload() {
-    const input = document.getElementById('csvFileInput');
-    const file = input.files[0];
+    function handleFileUpload() {
+        const input = document.getElementById('csvFileInput');
+        const file = input.files[0];
 
-    if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
+        if (file) {
+            const reader = new FileReader();
 
-        fetch('upload-csv', {  // Use the correct endpoint
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json(); // Ensure you're returning the parsed JSON
-        })
-        .then(data => {
-            console.log("Server response:", data);
-            if (Array.isArray(data) && data.length > 0) {
-                displayCSVData(data); // Pass the data to the display function
-            } else {
-                console.error("No data received or data is not in the expected format.");
-            }
-        })
-        .catch(error => {
-            console.error("Error uploading file:", error);
-        });
-    } else {
-        alert("Please select a CSV file first.");
-    }
-}
+            reader.onload = function (e) {
+                const text = e.target.result;
+                const data = parseCSV(text);  // Parse CSV text to array
+                displayCSVData(data);  // Use the data to display it in the table
+            };
 
-    
-        function displayCSVData(data) {
-            // Display the table
-            const tableHeader = document.getElementById('tableHeader');
-            const tableBody = document.getElementById('tableBody');
-    
-            // Clear previous data
-            tableHeader.innerHTML = '';
-            tableBody.innerHTML = '';
-    
-            // Create header row
-            const headerRow = data[0]; // Assuming the first row is the header
-            headerRow.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = header;
-                tableHeader.appendChild(th);
-            });
-    
-            // Create data rows
-            data.slice(1).forEach(row => { // Skip the header row
-                const tr = document.createElement('tr');
-                row.forEach(column => {
-                    const td = document.createElement('td');
-                    td.textContent = column;
-                    tr.appendChild(td);
-                });
-                tableBody.appendChild(tr);
-            });
-    
-            // Show the table
-            document.getElementById('csvTable').style.display = 'table';
+            reader.readAsText(file);
+        } else {
+            alert("Please select a CSV file first.");
         }
+    }
+
+    // Function to parse CSV string into a 2D array
+    function parseCSV(text) {
+        const rows = text.split("\n");
+        return rows.map(row => row.split(","));
+    }
+
+    // Function to display parsed CSV data in a table
+    function displayCSVData(data) {
+        const tableHead = document.querySelector('#csvTable thead');
+        const tableBody = document.querySelector('#csvTable tbody');
+
+        // Clear the table before adding new data
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '';
+
+        if (data.length > 0) {
+            // Create table headers
+            const headers = data[0];
+            const headerRow = document.createElement('tr');
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header.trim();  // Trim to remove excess spaces
+                headerRow.appendChild(th);
+            });
+            tableHead.appendChild(headerRow);
+
+            // Create table rows for the rest of the CSV data
+            data.slice(1).forEach(row => {
+                const rowElement = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell.trim();  // Trim to remove excess spaces
+                    rowElement.appendChild(td);
+                });
+                tableBody.appendChild(rowElement);
+            });
+        }
+    }
     </script>
-    
 </body>
 </html>
