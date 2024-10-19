@@ -7,24 +7,45 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="header">
-        <h1>Canvas Connect</h1>
-    </div>
-    <div class="container">
+    <header>
+        <img src="static\Bottom Bar.png" alt="Canvas Connect Logo">
+    </header>
+    <div class="about_container">
         <h2>Canvas Connect</h2>
-        <p>Welcome to Canvas Connect! This is a social network for students and teachers to connect with each other. You can create an account, make friends, and share your thoughts and ideas with the community.</p>
-        <!-- <h3>Features</h3>
-        <ul>
-            <li>Create an account</li>
-            <li>Make friends</li>
-            <li>Post updates</li>
-            <li>Like and comment on posts</li>
-        </ul>
-        <h3>Get Started</h3>
-        <p>Ready to get started? Click the button below to create an account and join the Canvas Connect community!</p>
-        <button>Create Account</button> -->
+        <p>Our campus is full of talented students and dedicated staff, and we want 
+            to make it easier for everyone to connect. That's why we created an app
+            that lets you instantly find and connect with classmates on LinkedIn. 
+            With just a click of a button, you can access the LinkedIn profiles 
+            of everyone in your class, making networking faster and more convenient
+            than ever. Whether you're looking to grow your LinkedIn connections or
+            find teammates for a project, our app makes it simple. It's a tool 
+            designed to help all of us make the most of the amazing community 
+            we're a part of.
+        </p>
     </div>
-    <div class="container">
+
+
+    <div class="instructions_container">
+        <h1>Instructions</h1>
+        <p>1. Download the Canvas Connect browser extension</p>
+        <p>2. Enable developer settings in your browsers extension settings</p>
+        <p>3. Navigate to your canvas course</p>
+        <p>4. Click the Canvas Connect extension icon in your browser
+            and make sure the browser scrapping is enabled
+        </p>
+        <p>5. Navigate to your class roster page</p>
+        <p>6. Once the csv file has been downloaded to your device, return 
+            to the Canvas Connect website
+        </p>
+        <p>7. Click the "Import CSV File" button below, and select the csv file</p>
+        <p>8. Click the "Upload CSV" and wait for the Linkedin data to be retreived</p>
+        <p>9. Once the data has been retreived, you can view the data in the table below</p>
+
+    </div>
+
+
+
+    <div class="csv_container">
         <h1>Import CSV File</h1>
         <input type="file" id="csvFileInput" accept=".csv" />
         <button onclick="handleFileUpload()">Upload CSV</button>
@@ -40,6 +61,17 @@
                 <!-- Table rows will be populated dynamically -->
             </tbody>
         </table>
+    </div>
+    <div class="about_us">
+    <h3>About Us</h3>
+       <p>We are a team of developers and problem solvers dedicated to making the socal
+            experience at our campus more connected and engaging. We believe that by connecting
+            students and staff on LinkedIn, we can help everyone build stronger relationships
+            and create more opportunities for collaboration. Our app is designed to be easy 
+            to use and accessible to everyone. We're excited to see how it helps our community
+            grow and thrive. Thank you for using Canvas Connect!
+       </p>
+       <p>Created by: Isaac Anderson, Andrew Jones, Chase Smith, and Bryson Branham</p>
     </div>
     <script src="static\script.js"></script>
 </body>
