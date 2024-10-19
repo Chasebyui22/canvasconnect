@@ -1,59 +1,47 @@
-import csv
-from playwright.sync_api import sync_playwright
-import time
+import re
+from playwright.sync_api import Playwright, sync_playwright, expect
 
-def search_linkedin(name, school):
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
-            page.set_default_timeout(30000)  # 30 seconds timeout
-            
-            # Navigate to LinkedIn
-            page.goto("https://www.linkedin.com/")
-            
-            # Wait for the search box to appear and type the name
-            page.wait_for_selector('input[aria-label="Search"]')
-            page.fill('input[aria-label="Search"]', f"{name} {school}")
-            page.press('input[aria-label="Search"]', "Enter")
-            
-            # Wait for search results
-            page.wait_for_selector('.search-results__list', state='visible')
-            
-            # Get the first result URL
-            first_result = page.query_selector('.search-result__info a')
-            url = first_result.get_attribute('href') if first_result else "No results found"
-            
-            browser.close()
-            return url
-    except Exception as e:
-        print(f"Error searching for {name}: {str(e)}")
-        return "Error occurred during search"
 
-def process_csv(input_file, output_file):
-    with open(input_file, 'r') as infile, open(output_file, 'w', newline='') as outfile:
-        reader = csv.reader(infile)
-        writer = csv.writer(outfile)
-        
-        # Read header
-        header = next(reader)
-        
-        # Write header
-        writer.writerow(header + ['LinkedIn URL'])
-        
-        for row in reader:
-            if len(row) >= 2:  # Ensure there are at least 2 columns (name and section)
-                name = row[0]
-                section = row[1] if len(row) > 1 else ""
-                role = row[2] if len(row) > 2 else ""
-                
-                url = search_linkedin(name, "byui")
-                writer.writerow(row + [url])
-                time.sleep(2)  # Add a delay to avoid rate limiting
-            else:
-                print(f"Skipping invalid row: {row}")
+def run(playwright: Playwright) -> None:
+    browser = playwright.chromium.launch(headless=False)
+    context = browser.new_context()
+    page = context.new_page()
+    page.goto("https://www.google.com/search?q=google&oq=google&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBBzg4NGowajKoAgCwAgE&sourceid=chrome&ie=UTF-8")
+    page.get_by_role("link", name="Google Google https://www.").click()
+    page.get_by_label("Search", exact=True).click()
+    page.get_by_label("Search", exact=True).fill("Andrew Allen ")
+    page.get_by_label("Search", exact=True).press("Home")
+    page.get_by_label("Search", exact=True).fill("Linkedin Andrew Allen ")
+    page.get_by_label("Search", exact=True).press("End")
+    page.get_by_label("Search", exact=True).fill("Linkedin Andrew Allen at BYUI")
+    page.get_by_role("link", name="Andrew Allen - FSY - For the").click(button="right")
+    page1 = context.new_page()
+    page1.goto("https://www.linkedin.com/in/andrew-allen-054826176")
+    page1.get_by_role("button", name="Dismiss").click()
+    page1.get_by_role("button", name="see more").click()
+    page1.get_by_role("button", name="Dismiss").click()
+    page1.get_by_text("- Self-motivated, optimistic").click()
+    page1.get_by_text("- Self-motivated, optimistic").click(button="right")
+    page1.get_by_role("heading", name="Others named Andrew Allen in").click()
+    page1.locator("section").filter(has_text="Sign in Stay updated on your").click()
+    page1.locator("section").filter(has_text="Sign in to manage").first.click()
+    page1.goto("https://www.linkedin.com/in/andrew-allen-054826176")
+    page1.get_by_role("heading", name="Honors & Awards").click()
+    page1.get_by_role("heading", name="Volunteer Experience").click()
+    page1.get_by_text("Skip to main content LinkedIn").press("ControlOrMeta+c")
+    page1.get_by_role("heading", name="Languages").click(modifiers=["ControlOrMeta"])
+    page1.get_by_text("Skip to main content LinkedIn").press("ControlOrMeta+c")
+    page1.locator("[data-test-id=\"logo-button\"]").click(button="right")
+    # Select the image element (using src part for identification)
+    image_element = page.query_selector('img[src*="profile-displayphoto"]')
+    # Take screenshot of the selected image
+    image_element.screenshot(path="profile_image.png")
+    # ---------------------
+    context.close()
+    browser.close()
 
-if __name__ == "__main__":
-    input_file = r"ScrapedData\names.csv"
-    output_file = r"ScrapedData\output.csv"
-    process_csv(input_file, output_file)
+
+with sync_playwright() as playwright:
+    run(playwright)
+
+
