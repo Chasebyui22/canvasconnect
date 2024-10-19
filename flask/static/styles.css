@@ -1,6 +1,6 @@
 
 body {
-    background-color: #dddede; /* Light gray background */
+    background-color: #f0f0f0; /* Light gray background */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Professional-looking font */
     color: #333333; /* Dark gray text for readability */
     margin: 0;
@@ -26,9 +26,31 @@ h2, h3, h4, h5, h6 {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    padding-top: 50px;
 }
 .instructions_container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+}
+.csv_container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.about_us {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+/* Style for the footer */
+header {
+    background-color: black; /* Dark gray background */
+    color: #ffffff; /* White text color */
+    text-align: center; /* Center text horizontally */
+    padding: 0px; /* Add padding to the top and bottom */
+    position: fixed; /* Fix the footer to the top of the page */
+    width: 100%; /* Full width */
+    top: 0; /* Stick to the top */
+    
 }
