@@ -23,7 +23,7 @@ CanvasConnect is a project designed to enhance the functionality of Canvas, a po
 🔗 Brings you to a new page where you download.
 
 ## 🚀 Usage
-- 🌐 Open webpage.
+- 🌐 <a href="http://44.215.79.228:5000/" target="_blank">Open webpage</a>.
 - 📖 Read description and instructions.
 - ⬇️ Press download extension.
 - ⚙️ Once the extension is downloaded, enable scraping.
